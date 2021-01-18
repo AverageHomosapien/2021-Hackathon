@@ -1,0 +1,4 @@
+# Please add all dependencies we use here and it's versions so docker can do some black magic for us
+
+Flask==1.0.2
+flask-socketio==5.0.1
