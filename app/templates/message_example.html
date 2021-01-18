@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <title>Flask Chat</title>
+  </head>
+  <body>
+    {% if messages|length <= 0 %}
+      <h3 style='color: #ccc;font-size: 30px;'>No messages yet..</h3>
+      <div class="message_holder"></div>
+    {% else %}
+      <ul>
+        {% for message in messages %}
+          <li>User {{message[0]}}: {{message[1]}}</li>
+        {% endfor %}
+      <ul>
+    {% endif %}
+
+    <form action="" method="POST" name="form">
+      <label for="name">Name:</label>
+      <input type="text" name="username" id="username" placeholder='Username...'/>
+      <input type="text" name="message" id="message" placeholder='Message...'/>
+      <input type="submit" name="submit" id="submit"/>
+    </form>
+  </body>
+  </html>
