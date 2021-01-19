@@ -64,6 +64,7 @@ class Interests(Base):
 class UserInterests(Base):
     """ Holds users' interests """
     __tablename__ = "UserInterests"
+    ID = Column(Integer, primary_key=True)
     username = Column(String(80), primary_key=True)
     interest = Column(String(80))
     """
@@ -86,11 +87,11 @@ class UserInterests(Base):
             'interest': self.interest
         }
 
-
+# Messages DB
 class Messages(Base):
     """ Holds users' messages"""
     __tablename__ = "Messages"
-    id = Column(Integer, primary_key=True)
+    ID = Column(Integer, primary_key=True)
     username = Column(String(80), nullable=False)
     interest = Column(String(80), nullable=False)
     content = Column(Text, nullable=False)
@@ -111,6 +112,30 @@ class Messages(Base):
             'interest': self.interest,
             'content': self.interest,
             'posted': self.posted
+        }
+
+# Chats DB
+class Chats(Base):
+    """ Holds chat details """
+    __tablename__ = "Chats"
+    ID = Column(Integer, primary_key=True, unique=True)
+    interest = Column(String(80), unique=True, nullable=False)
+    topic = Column(String(80), nullable=False)
+    participants = Column(String(80), nullable=False)
+
+    def __init__(self, interest, topic, participants):
+        self.interest = interest
+        self.topic = topic
+        self.participants = participants
+
+    def __repr__(self):
+        return '<Chat {}, Topic {}, Participants {}>'.format(self.interest, self.topic, self.participants)
+
+    def serialize(self):
+        return {
+            'interest': self.interest,
+            'topic': self.topic,
+            'participants': self.participants
         }
 
 
@@ -155,6 +180,12 @@ def get_user_interests():
     userinterests = session.query(UserInterests).all()
     session.close()
     return jsonify(userinterests = [ui.serialize() for ui in userinterests])
+
+@app.route('/chats', methods=['GET'])
+def get_chats():
+    chats = session.query(Chats).all()
+    session.close()
+    return jsonify(chats = [c.serialize() for c in chats])
 
 
 if __name__ == "__main__":
