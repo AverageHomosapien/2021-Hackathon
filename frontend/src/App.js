@@ -1,6 +1,7 @@
-import logo from './logo.svg';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import Header from './Header/header-index'
+import Profile from './Profile/profile-index'
+import Home from './Home-Page/home-page-index'
 import './App.css';
 
 function App() {
@@ -10,7 +11,8 @@ function App() {
               <div>
                   <Route path="/" component={Header}/>
               </div>
-              {/* <Route exact path="/home" component={HomeIndex}/> */}
+              <Route exact path="/home" component={Home}/>
+              <Route exact path="/profile" component={Profile}/>
           </div>
       </Router>
   )

@@ -1,11 +1,10 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import HomeIcon from '@material-ui/icons/Home';
-
-
+import {Link} from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -38,8 +37,8 @@ export default function CenteredTabs(props) {
                 onChange={handleChange}
                 centered
             >
-                <Tab className={classes.label} label="Home" icon={<HomeIcon/>} />
-                <Tab className={classes.label} label="Profile" icon={<PersonPinIcon />} aria-label="person" />
+                <Tab className={classes.label} icon={<HomeIcon/>} label="Home" component={Link} to="/home" index={0} />
+                <Tab className={classes.label} label="Profile" icon={<PersonPinIcon />} component={Link} to="/profile" index={1} />
             </Tabs>
         </React.Fragment>
     );

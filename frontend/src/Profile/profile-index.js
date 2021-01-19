@@ -1,7 +1,7 @@
-import React, {Component, Fragment} from "react";
+import React, {Component} from "react";
 
 
-class Home extends Component {
+class Profile extends Component {
     render() {
         return (
             <React.Fragment>
@@ -12,4 +12,4 @@ class Home extends Component {
 }
 
 
-export default Home
+export default Profile

@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import SimpleTabs from "./Home-Tabs"
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
 import Paper from "@material-ui/core/Paper";
-import MenuAppBar from './Menu-extend'
 
 
 
@@ -18,11 +14,16 @@ class Header extends Component {
     static getDerivedStateFromProps = (nextProps, prevState) => {
         /* Depending on the route -- We're switching  */
         switch (nextProps.location.pathname) {
-            // case "/home":
-            //     return {
-            //         activeTab: 0,
-            //         navBarRouting: true
-            //     };
+            case "/home":
+                return {
+                    activeTab: 0,
+                    navBarRouting: true
+                };
+            case "/profile":
+                return {
+                    activeTab: 1,
+                    navBarRouting: true
+                };
 
             default:
                 return {
@@ -37,8 +38,10 @@ class Header extends Component {
         if (this.state.activeTab === newValue) {
             return;
         }
-        this.setState({ activeTab: newValue });
-        this.setState({ navBarRouting: true })
+        this.setState({
+            activeTab: newValue,
+            navBarRouting: true
+        })
     };
 
     getStyles = () => {
