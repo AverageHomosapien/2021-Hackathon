@@ -13,7 +13,7 @@ def sessions():
     if request.method == 'POST':
         print("username is {} and message is {}".format(request.form['username'], request.form['message']))
         messages.append((request.form['username'], request.form['message']))
-    return render_template('message_example.html', messages=messages)
+    return render_template('_message_example.html', messages=messages)
 
 @socketio.on('my event')
 def handle_my_custom_event(json, methods=['GET', 'POST']):
