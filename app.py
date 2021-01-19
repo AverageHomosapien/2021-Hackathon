@@ -4,27 +4,29 @@ from pathlib import Path
 import os
 import json
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, Text
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 
 #### App Init ####
 app = Flask(__name__)
 app.config.from_object('config.TestConfig')
-db = SQLAlchemy(app)
 
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+Base = declarative_base()
+Base.metadata.create_all(engine)
 DBsession = sessionmaker(bind=engine)
 session = DBsession()
 
 
 #### Databases - SQLAlchemy ####
 # Users DB
-class Users(db.Model):
+class Users(Base):
     """ Holds user details """
-    #__tablename__ = "Users"
-    ID = db.Column(db.Integer, primary_key=True, unique=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(80), nullable=False)
+    __tablename__ = "Users"
+    ID = Column(Integer, primary_key=True, unique=True)
+    username = Column(String(80), unique=True, nullable=False)
+    password = Column(String(80), nullable=False)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -40,11 +42,11 @@ class Users(db.Model):
 
 
 # Interests DB
-class Interests(db.Model):
+class Interests(Base):
     """ Holds interests """
-    #__tablename__ == "Interests"
-    ID = db.Column(db.Integer, primary_key=True)
-    interest = db.Column(db.String(80), unique=True)
+    __tablename__ = "Interests"
+    ID = Column(Integer, primary_key=True)
+    interest = Column(String(80), unique=True)
 
     def __init__(self, interest):
         self.interest = interest
@@ -59,11 +61,11 @@ class Interests(db.Model):
 
 
 # User Interests DB
-class UserInterests(db.Model):
+class UserInterests(Base):
     """ Holds users' interests """
-    #__tablename__ == "UserInterests"
-    username = db.Column(db.String(80), primary_key=True)
-    interest = db.Column(db.String(80))
+    __tablename__ = "UserInterests"
+    username = Column(String(80), primary_key=True)
+    interest = Column(String(80))
     """
     username = db.Column(db.String(80), primary_key=True, ForeignKey(users.username))
     interest_name = db.Column(db.String(80), ForeignKey(interests.interest_name))
@@ -85,14 +87,14 @@ class UserInterests(db.Model):
         }
 
 
-class Messages(db.Model):
+class Messages(Base):
     """ Holds users' messages"""
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), nullable=False)
-    interest = db.Column(db.String(80), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    posted = db.Column(db.Text, nullable=False)
+    __tablename__ = "Messages"
+    id = Column(Integer, primary_key=True)
+    username = Column(String(80), nullable=False)
+    interest = Column(String(80), nullable=False)
+    content = Column(Text, nullable=False)
+    posted = Column(Text, nullable=False)
 
     def __init__(self, username, interest, content, posted=datetime.utcnow()):
         self.username = username
