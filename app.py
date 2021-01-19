@@ -6,9 +6,6 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship, sessionmaker
-#from flask_login import current_user, login_required, login_user, logout_user
-#from app.forms import RegistrationForm, LoginForm
-
 
 #### App Init ####
 app = Flask(__name__)
