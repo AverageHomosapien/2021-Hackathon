@@ -37,8 +37,8 @@ export default function CenteredTabs(props) {
                 onChange={handleChange}
                 centered
             >
-                <Tab className={classes.label} icon={<HomeIcon/>} label="Home" component={Link} to="/home" index={0} />
-                <Tab className={classes.label} label="Profile" icon={<PersonPinIcon />} component={Link} to="/profile" index={1} />
+                <Tab className={classes.label}  label="First" component={Link} to="/home/1" index={0} />
+                <Tab className={classes.label} label="Second"  component={Link} to="/home/2" index={1} />
             </Tabs>
         </React.Fragment>
     );
