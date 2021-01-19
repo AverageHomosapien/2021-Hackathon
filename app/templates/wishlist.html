@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <a class="category_return" href="/category"><i>Back to browsing Item Categories</i></a><br>
+  {% if item_list|length <= 0 %}
+  <div class="gallery-display">
+    <div class="gallery-desc">
+      I'm sorry but there are no items in your wishlist yet. Please return to browsing Item Categories to continue shopping.
+    </div>
+  </div>
+  {% else %}
+    {% for i in range(item_list|length)%}
+      <div class="gallery-display">
+        <img src="{{files[i]}}">
+        <div class="gallery-desc">
+          <b>{{item_list[i]}}</b>
+        </div>
+        <hr>
+        <div class="gallery-desc">
+          <br>
+          <b>Price:</b> £{{'%0.2f'%price[i]}}<br><br>
+          <b>Quantity in Stock:</b> {{quantity[i]}}<br><br>
+          <form name="cart-form" method="post" action="/wishlist">
+            <button name="button" value="{{item_list[i]}}" type="submit">Add to Cart</button>
+            <button name="button" value="{{item_list[i]}}-wishlist" type="submit">Remove from Wishlist</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+{% endblock %}
