@@ -4,8 +4,7 @@ from flask_login import LoginManager
 from config import Config
 
 app = Flask(__name__)
-app.config.from_object(Config)
-
+app.config.from_object('config.TestConfig')
 db = SQLAlchemy(app)
 
 login = LoginManager()
@@ -15,5 +14,4 @@ db.init_app(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
-
-from app import routes, models
+from app import models

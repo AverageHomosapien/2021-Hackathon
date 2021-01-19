@@ -1,58 +1,104 @@
-from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from flask_login import UserMixin
-import flask
-from app import database, login
+#from flask_login import UserMixin
+from app import db, login
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
+
 
 # Users DB
-class User(UserMixin, db.Model):
-    __tablename__ = "users"
-    userID = db.Column(db.Integer, primary_key=True, unique=True)
-    username = db.Column(db.String(80), unique=True)
-    password = db.Column(db.String(80))
+class Users(db.Model):
+    """ Holds user details """
+    #__tablename__ = "Users"
+    ID = db.Column(db.Integer, primary_key=True, unique=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(80), nullable=False)
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
 
     def __init__(self, username, password):
         self.username = username
-        self.set_password(password)
+        self.password = password
 
-    def __repr__(self):
-        return '<User {} - with ID {}>'.format(self.username)
+    def serialize(self):
+        return {
+            'username': self.username,
+        }
 
-    # hashes the password and saves to user
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    # checks the password to see if it's valid or not
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    @login.user_loader
-    def load_user(id):
-        return User.query.get(int(id))
+    #@login.user_loader
+    #def load_user(id):
+    #    return User.query.get(int(id))
 
 
 # Interests DB
-class Interest(db.Model):
-    __tablename__ == "interests"
-    interestID = db.Column(db.Integer, primary_key=True)
-    interest_name = db.Column(db.String(80), unique=True)
+class Interests(db.Model):
+    """ Holds interests """
+    #__tablename__ == "Interests"
+    ID = db.Column(db.Integer, primary_key=True)
+    interest = db.Column(db.String(80), unique=True)
 
     def __init__(self, interest):
-        self.interest_name = interest
+        self.interest = interest
 
     def __repr__(self):
-        return '<Interest {}>'.format(self.interest_name)
+        return '<Interest {}>'.format(self.interest)
+
+    def serialize(self):
+        return {
+            'interest': self.interest
+        }
 
 
 # User Interests DB
-class UserInterest(db.Model):
-    __tablename__ == "user_interests"
-    username = db.Column(db.String(80), primary_key=True, db.ForeignKey('users.username'))
-    interest_name = db.Column(db.String(80), db.ForeignKey('interests.interest_name'))
+class UserInterests(db.Model):
+    """ Holds users' interests """
+    #__tablename__ == "UserInterests"
+    username = db.Column(db.String(80), primary_key=True)
+    interest = db.Column(db.String(80))
+    """
+    username = db.Column(db.String(80), primary_key=True, ForeignKey(users.username))
+    interest_name = db.Column(db.String(80), ForeignKey(interests.interest_name))
+
+    user_n = db.relationship('User', foreign_keys='UserInterest.username')
+    interest_n = db.relationship('Interest', foreign_keys='UserInterest.interest_name')
+    """
 
     def __init__(self, username, interest):
         self.username = username
-        self.interest_name = interest
+        self.interest = interest
 
     def __repr__(self):
-        return '<User {} with interest {}>'.format(self.username, self.interest_name)
+        return '<User {} with interest {}>'.format(self.username, self.interest)
+
+    def serialize(self):
+        return {
+            'username': self.username,
+            'interest': self.interest
+        }
+
+class Messages(db.Model):
+    """ Holds users' messages"""
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False)
+    interest = db.Column(db.String(80), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    posted = db.Column(db.Text, nullable=False)
+
+    def __init__(self, username, interest, content, posted=datetime.utcnow()):
+        self.username = username
+        self.interest = interest
+        self.content = content
+        self.posted = posted
+
+    def __repr__(self):
+        return '<User: {}, Post {}>'.format(self.username, self.content)
+
+    def serialize(self):
+        return {
+            'username': self.username,
+            'interest': self.interest,
+            'content': self.interest,
+            'posted': self.posted
+        }

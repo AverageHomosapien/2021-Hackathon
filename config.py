@@ -2,8 +2,8 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
-    DEBUG = True
-    DEVELOPMENT = True
+    DEBUG = False
+    DEVELOPMENT = False
     APP_FOLDER = os.path.join(basedir, 'app')
     STATIC_FOLDER = os.path.join(APP_FOLDER, 'static')
     TEMPLATES_FOLDER = os.path.join(STATIC_FOLDER, 'templates')
@@ -13,3 +13,10 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     FLASK_APP = "app"
     FLASK_ENV = "development"
+
+class ProductionConfig(Config):
+    pass
+
+class TestConfig(Config):
+    DEBUG = True
+    DEVELOPMENT = True
