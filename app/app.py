@@ -12,10 +12,9 @@ from flask_socketio import SocketIO
 #### App Init ####
 app = Flask(__name__)
 app.config.from_object('config.TestConfig')
-app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
 socketio = SocketIO(app)
 
-
+#### Database Init ####
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 Base = declarative_base()
 Base.metadata.create_all(engine)
@@ -114,7 +113,7 @@ class Messages(Base):
         return {
             'username': self.username,
             'interest': self.interest,
-            'content': self.interest,
+            'content': self.content,
             'posted': self.posted
         }
 
@@ -160,41 +159,104 @@ msg = Messages(username, interest, content)
 #db.session.commit()
 return jsonify(request.args)"""
 
+# request.args.to_dict()
+# request.get()
 
+# https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
 @app.route('/messages', methods=['GET'])
 def get_messages():
-    messages = session.query(Messages).all()
+    messages = []
+    if len(request.args.to_dict()) == 0:
+        messages = session.query(Messages).all()
+    else:
+        if request.args.get('id') != None:
+            id = request.args.get('id')
+            messages = session.query(Messages).filter_by(id = id)#.one()?
+        elif request.args.get('username') != None:
+            username = request.args.get('username')
+            messages = session.query(Messages).filter_by(username = username)#.one()?
+        elif request.args.get('interest') != None:
+            interest = request.args.get('interest')
+            messages = session.query(Messages).filter_by(interest = interest)#.one()?
+        elif request.args.get('content') != None:
+            content = request.args.get('content')
+            messages = session.query(Messages).filter_by(content = content)#.one()?
+        elif request.args.get('posted') != None:
+            posted = request.args.get('posted')
+            messages = session.query(Messages).filter_by(posted = posted)#.one()? # filter on messages
+        #return jsonify(request.args.to_dict())
     session.close()
     return jsonify(messages = [m.serialize() for m in messages])
 
 @app.route('/interests', methods=['GET'])
 def get_interests():
-    interests = session.query(Interests).all()
+    interests = []
+    if len(request.args.to_dict()) == 0:
+        interests = session.query(Interests).all()
+    else:
+        if request.args.get('id') != None:
+            id = request.args.get('id')
+            interests = session.query(Interests).filter_by(id = id)#.one()?
+        elif request.args.get('interest') != None:
+            interest = request.args.get('interest')
+            interests = session.query(Interests).filter_by(interest = interest)#.one()?
     session.close()
     return jsonify(interests = [i.serialize() for i in interests])
 
 @app.route('/users', methods=['GET'])
 def get_users():
-    users = session.query(Users).all()
+    users = []
+    if len(request.args.to_dict()) == 0:
+        users = session.query(Users).all()
+    else:
+        if request.args.get('id') != None:
+            id = request.args.get('id')
+            users = session.query(Users).filter_by(id = id)#.one()?
+        elif request.args.get('username') != None:
+            username = request.args.get('username')
+            users = session.query(Users).filter_by(username = username)#.one()?
     session.close()
     return jsonify(users= [i.serialize() for i in users])
 
 @app.route('/user-interests', methods=['GET'])
 def get_user_interests():
-    userinterests = session.query(UserInterests).all()
+    userinterests = []
+    if len(request.args.to_dict()) == 0:
+        userinterests = session.query(UserInterests).all()
+    else:
+        if request.args.get('username') != None:
+            username = request.args.get('username')
+            userinterests = session.query(UserInterests).filter_by(username = username)#.one()?
+        elif request.args.get('interest') != None:
+            interest = request.args.get('interest')
+            userinterests = session.query(UserInterests).filter_by(interest = interest)#.one()?
     session.close()
     return jsonify(userinterests = [ui.serialize() for ui in userinterests])
 
 @app.route('/chats', methods=['GET'])
 def get_chats():
-    chats = session.query(Chats).all()
+    chats = []
+    if len(request.args.to_dict()) == 0:
+        chats = session.query(Chats).all()
+    else:
+        if request.args.get('id') != None:
+            id = request.args.get('id')
+            chats = session.query(Chats).filter_by(id = id)#.one()?
+        elif request.args.get('interest') != None:
+            interest = request.args.get('interest')
+            chats = session.query(Chats).filter_by(interest = interest)#.one()?
+        elif request.args.get('topic') != None:
+            topic = request.args.get('topic')
+            chats = session.query(Chats).filter_by(topic = topic)#.one()?
+        elif request.args.get('participants') != None:
+            participants = request.args.get('participants')
+            chats = session.query(Chats).filter_by(participants = participants)#.one()?
     session.close()
     return jsonify(chats = [c.serialize() for c in chats])
 
 
 
 #### WEB SOCKET CHAT SERVER ####
-
 messages = []
 @app.route('/chatserver', methods=['GET', 'POST'])
 def sessions():

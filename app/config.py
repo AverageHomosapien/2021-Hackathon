@@ -2,13 +2,10 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
-    DEBUG = False
-    DEVELOPMENT = False
-
     # Because file directories have changed
     # APP_FOLDER = os.path.join(basedir, 'app')
-    
-    
+    DEBUG = False
+    DEVELOPMENT = False
     STATIC_FOLDER = os.path.join(basedir, 'static')
     TEMPLATES_FOLDER = os.path.join(STATIC_FOLDER, 'templates')
     DATABASE_FOLDER = os.path.join(STATIC_FOLDER, 'database')

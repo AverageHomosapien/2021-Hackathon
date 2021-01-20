@@ -1,2 +1,5 @@
 frontend/.eslintcache
+
+# Gitignoring pycaches
 app/__pycache__
+__pycache__/
