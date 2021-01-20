@@ -137,7 +137,7 @@ export default function PrimarySearchAppBar() {
             <MailIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        Messages
       </MenuItem>
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
@@ -145,7 +145,7 @@ export default function PrimarySearchAppBar() {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        Notifications
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}
       >
@@ -158,7 +158,7 @@ export default function PrimarySearchAppBar() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        Profile
       </MenuItem>
     </Menu>
   );

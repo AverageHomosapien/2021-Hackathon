@@ -19,4 +19,4 @@ ENTRYPOINT [ "python3" ]
 
 
 # Run this ish as the main entry point
-CMD [ "app/working-messages.py" ]
+CMD [ "app.py" ]

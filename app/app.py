@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, abort, request, render_template, flash, jsonify
+from flask import Flask, redirect, url_for, abort, request, render_template, flash, jsonify, make_response
 from datetime import datetime
 from pathlib import Path
 import os
@@ -7,10 +7,14 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
+from flask_socketio import SocketIO
 
 #### App Init ####
 app = Flask(__name__)
 app.config.from_object('config.TestConfig')
+app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
+socketio = SocketIO(app)
+
 
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 Base = declarative_base()
@@ -188,5 +192,52 @@ def get_chats():
     return jsonify(chats = [c.serialize() for c in chats])
 
 
+
+#### WEB SOCKET CHAT SERVER ####
+
+messages = []
+@app.route('/chatserver', methods=['GET', 'POST'])
+def sessions():
+    for idx, message in enumerate(messages):
+        print("MESSAGE {} is from {}, message {}".format(idx, message[0], message[1]))
+    if request.method == 'POST':
+        print("username is {} and message is {}".format(request.form['username'], request.form['message']))
+        messages.append((request.form['username'], request.form['message']))
+    return render_template('_message_example.html', messages=messages)
+
+@socketio.on('my event')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    print('received my event: ' + str(json))
+    socketio.emit('my response', json, callback=messageReceived)
+
+
+
+
+#### MIDDLEWARE #####
+@app.after_request
+def after_request(response):
+        origin = request.headers.get('Origin')
+        if request.method == 'OPTIONS':
+            response = make_response()
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            response.headers.add(
+                'Access-Control-Allow-Headers', 'Content-Type')
+            response.headers.add(
+                'Access-Control-Allow-Headers', 'x-csrf-token')
+            response.headers.add('Access-Control-Allow-Methods',
+                                 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+            if origin:
+                response.headers.add('Access-Control-Allow-Origin', origin)
+        else:
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            if origin:
+                response.headers.add('Access-Control-Allow-Origin', origin)
+
+        return response
+
+
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    # app.run(host='0.0.0.0', debug=True)
+    socketio.run(app, host='0.0.0.0', port="5000")
