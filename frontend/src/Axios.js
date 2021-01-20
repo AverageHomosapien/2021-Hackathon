@@ -1,3 +1,4 @@
+import { convertRowsPropToState } from "@material-ui/data-grid";
 import axios from "axios";
 
 const LOCAL_PYTHON_API = 'http://localhost:5000';
@@ -23,9 +24,9 @@ const genericRequest = {
 
 const PYTHON_API = {
     getUsers: () =>
-        genericRequest.post(`getUsers`),
+        genericRequest.get(`users`),
 };
 
 export default {
-    PYTHON_API,
+    PYTHON_API
 }
