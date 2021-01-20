@@ -25,6 +25,8 @@ const genericRequest = {
 const PYTHON_API = {
     getUsers: () =>
         genericRequest.get(`users`),
+    getInterests: () =>
+        genericRequest.get(`interests`)
 };
 
 export default {

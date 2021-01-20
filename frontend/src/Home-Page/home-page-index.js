@@ -1,15 +1,21 @@
 import React, {Component, Fragment} from "react";
 import SimpleTabs from "./Custom-Tabs"
-import DataTable from './Datagrid'
 import axios from '../Axios'
 
 class Home extends Component {
 
+    state = {
+        data: null
+    }
+
     /* Working example of data being consumed from PYTHON API */
     componentDidMount() {
-        axios.PYTHON_API.getUsers()
+        axios.PYTHON_API.getInterests()
             .then( response => {
-                console.log(response);   
+                this.setState({
+                    data: response.data
+                })
+                console.log(this.state.data);
             })
     }
 
@@ -18,7 +24,7 @@ class Home extends Component {
         return (
             <React.Fragment>
                 <div style={{paddingTop: "5%"}}>
-                    <SimpleTabs />
+                    <SimpleTabs interestArray={this.state.data}/>
                 </div>
             </React.Fragment>
         )
