@@ -61,14 +61,14 @@ export default function SimpleTabs(props) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" style={{backgroundColor: "#1f1f1f"}}>
+      <AppBar position="static" style={{backgroundColor: "#000000"}}>
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Chats" {...a11yProps(0)} />
           <Tab label="Wiki" {...a11yProps(1)} />
           <Tab label="Rules" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <TabPanel  value={value} index={0}>
+      <TabPanel style={{backgroundColor: "WHITE"}} value={value} index={0}>
         { props.interestArray &&
           <NestedGrid dataArray={props.interestArray}/>
         }

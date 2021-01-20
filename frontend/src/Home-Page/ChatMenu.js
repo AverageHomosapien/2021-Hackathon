@@ -36,20 +36,20 @@ export default function NestedGrid(props) {
         return props.dataArray.interests.slice(startingIndex, (arrayBreakdown[index] + startingIndex)); 
     }else if (index === 2) {
         const startingIndex = arrayBreakdown[index - 2] + arrayBreakdown[index - 1];
-        return props.dataArray.interests.slice(startingIndex, (arrayBreakdown[index] + startingIndex)); 
+        return props.dataArray.interests.slice(startingIndex, (arrayBreakdown[index] + startingIndex));
     }
   }
 
   function FormRow() {
     return (
       <React.Fragment>
-        <Grid item xs={2}>
+        <Grid item xs={4} >
             <ChatButton style={{flexWrap : 'wrap'}} dataArray={partionArrayIntoThree(0)}/>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={4}>
             <ChatButton style={{flexWrap : 'wrap'}} dataArray={partionArrayIntoThree(1)}/>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={4}>
             <ChatButton style={{flexWrap : 'wrap'}} dataArray={partionArrayIntoThree(2)}/>
         </Grid>
       </React.Fragment>
@@ -58,8 +58,8 @@ export default function NestedGrid(props) {
 
   return (
     <div className={classes.root}>
-      <Grid container  spacing={1}>
-        <Grid container item xs={10} spacing={1}>
+      <Grid container  >
+        <Grid container item xs={12} >
           <FormRow />
         </Grid>
       </Grid>
