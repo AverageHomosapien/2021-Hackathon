@@ -22,6 +22,7 @@ DBsession = sessionmaker(bind=engine)
 session = DBsession()
 
 
+# Can't search on ID
 #### Databases - SQLAlchemy ####
 # Users DB
 class Users(Base):
@@ -40,7 +41,8 @@ class Users(Base):
 
     def serialize(self):
         return {
-            'username': self.username,
+            'id': self.ID,
+            'username': self.username
         }
 
 
@@ -48,18 +50,22 @@ class Users(Base):
 class Interests(Base):
     """ Holds interests """
     __tablename__ = "Interests"
-    ID = Column(Integer, primary_key=True)
-    interest = Column(String(80), unique=True)
+    ID = Column(Integer, primary_key=True, nullable=False)
+    interest = Column(String(80), unique=True, nullable=False)
+    topic = Column(String(80), nullable=False)
 
-    def __init__(self, interest):
+    def __init__(self, interest, topic):
         self.interest = interest
+        self.topic = topic
 
     def __repr__(self):
         return '<Interest {}>'.format(self.interest)
 
     def serialize(self):
         return {
-            'interest': self.interest
+            'id': self.ID,
+            'interest': self.interest,
+            'topic': self.topic
         }
 
 
@@ -67,7 +73,7 @@ class Interests(Base):
 class UserInterests(Base):
     """ Holds users' interests """
     __tablename__ = "UserInterests"
-    ID = Column(Integer, primary_key=True)
+    ID = Column(Integer, primary_key=True, nullable=False)
     username = Column(String(80), primary_key=True)
     interest = Column(String(80))
     """
@@ -86,6 +92,7 @@ class UserInterests(Base):
 
     def serialize(self):
         return {
+            'id': self.ID,
             'username': self.username,
             'interest': self.interest
         }
@@ -111,6 +118,7 @@ class Messages(Base):
 
     def serialize(self):
         return {
+            'id': self.ID,
             'username': self.username,
             'interest': self.interest,
             'content': self.content,
@@ -136,6 +144,7 @@ class Chats(Base):
 
     def serialize(self):
         return {
+            'id': self.id,
             'interest': self.interest,
             'topic': self.topic,
             'participants': self.participants
@@ -161,8 +170,9 @@ return jsonify(request.args)"""
 
 # request.args.to_dict()
 # request.get()
+## https://blog.softhints.com/python-get-first-elements-dictionary/ getting number of dictionary elems
 
-# https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+# https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html immdict functions
 @app.route('/messages', methods=['GET'])
 def get_messages():
     messages = []
