@@ -113,8 +113,14 @@ Interests.Messages = relationship("Messages", order_by=Messages.ID, back_populat
 
 ## https://blog.softhints.com/python-get-first-elements-dictionary/ getting number of dictionary elems
 # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html immdict functions
-@app.route('/messages', methods=['GET'])
+@app.route('/messages', methods=['GET', 'POST'])
 def get_messages():
+    if request.method == 'POST':
+        request_dict = request.get_json(force=True)
+        new_message = Messages(username = request_dict.get('username'), interest = request_dict.get('interest'),
+                                content = request_dict.get('content'), posted = datetime.utcnow())
+        session.add(new_message)
+        session.commit()
     messages = []
     if len(request.args.to_dict()) == 0:
         messages = session.query(Messages).all()
@@ -124,22 +130,27 @@ def get_messages():
             messages = session.query(Messages).filter_by(ID = id)#.one()?
         elif request.args.get('username') != None:
             username = request.args.get('username')
-            messages = session.query(Messages).filter_by(username = username)#.one()?
+            messages = session.query(Messages).filter_by(username = username)
         elif request.args.get('interest') != None:
             interest = request.args.get('interest')
-            messages = session.query(Messages).filter_by(interest = interest)#.one()?
+            messages = session.query(Messages).filter_by(interest = interest)
         elif request.args.get('content') != None:
             content = request.args.get('content')
-            messages = session.query(Messages).filter_by(content = content)#.one()?
+            messages = session.query(Messages).filter_by(content = content)
         elif request.args.get('posted') != None:
             posted = request.args.get('posted')
-            messages = session.query(Messages).filter_by(posted = posted)#.one()? # filter on messages
-        #return jsonify(request.args.to_dict())
+            messages = session.query(Messages).filter_by(posted = posted)
     session.close()
     return jsonify(messages = [m.serialize() for m in messages])
 
-@app.route('/interests', methods=['GET'])
+
+@app.route('/interests', methods=['GET', 'POST'])
 def get_interests():
+    if request.method == 'POST':
+        request_dict = request.get_json(force=True)
+        new_interest = Interests(interest = request_dict.get('interest'), topic = request_dict.get('topic'))
+        session.add(new_interest)
+        session.commit()
     interests = []
     if len(request.args.to_dict()) == 0:
         interests = session.query(Interests).all()
@@ -156,33 +167,45 @@ def get_interests():
     session.close()
     return jsonify(interests = [i.serialize() for i in interests])
 
-@app.route('/users', methods=['GET'])
+
+@app.route('/users', methods=['GET', 'POST'])
 def get_users():
+    if request.method == 'POST':
+        request_dict = request.get_json(force=True)
+        new_user = Users(username = request_dict.get('username'), password = request_dict.get('password'))
+        session.add(new_user)
+        session.commit()
     users = []
     if len(request.args.to_dict()) == 0:
         users = session.query(Users).all()
     else:
         if request.args.get('id') != None:
             id = request.args.get('id')
-            users = session.query(Users).filter_by(ID = id)#.one()?
+            users = session.query(Users).filter_by(ID = id)
         elif request.args.get('username') != None:
             username = request.args.get('username')
-            users = session.query(Users).filter_by(username = username)#.one()?
+            users = session.query(Users).filter_by(username = username)
     session.close()
     return jsonify(users= [i.serialize() for i in users])
 
-@app.route('/user-interests', methods=['GET'])
+
+@app.route('/user-interests', methods=['GET', 'POST'])
 def get_user_interests():
+    if request.method == 'POST':
+        request_dict = request.get_json(force=True)
+        new_user_interest = UserInterests(username = request_dict.get('username'), interest = request_dict.get('interest'))
+        session.add(new_user_interest)
+        session.commit()
     userinterests = []
     if len(request.args.to_dict()) == 0:
         userinterests = session.query(UserInterests).all()
     else:
         if request.args.get('username') != None:
             username = request.args.get('username')
-            userinterests = session.query(UserInterests).filter_by(username = username)#.one()?
+            userinterests = session.query(UserInterests).filter_by(username = username)
         elif request.args.get('interest') != None:
             interest = request.args.get('interest')
-            userinterests = session.query(UserInterests).filter_by(interest = interest)#.one()?
+            userinterests = session.query(UserInterests).filter_by(interest = interest)
     session.close()
     return jsonify(userinterests = [ui.serialize() for ui in userinterests])
 
@@ -205,30 +228,26 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
     socketio.emit('my response', json, callback=messageReceived)
 
 
-
-
 #### MIDDLEWARE #####
 @app.after_request
 def after_request(response):
-        origin = request.headers.get('Origin')
-        if request.method == 'OPTIONS':
-            response = make_response()
-            response.headers.add('Access-Control-Allow-Credentials', 'true')
-            response.headers.add(
-                'Access-Control-Allow-Headers', 'Content-Type')
-            response.headers.add(
-                'Access-Control-Allow-Headers', 'x-csrf-token')
-            response.headers.add('Access-Control-Allow-Methods',
-                                 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
-            if origin:
-                response.headers.add('Access-Control-Allow-Origin', origin)
-        else:
-            response.headers.add('Access-Control-Allow-Credentials', 'true')
-            if origin:
-                response.headers.add('Access-Control-Allow-Origin', origin)
-
-        return response
-
+    origin = request.headers.get('Origin')
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add(
+            'Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add(
+            'Access-Control-Allow-Headers', 'x-csrf-token')
+        response.headers.add('Access-Control-Allow-Methods',
+                             'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+        if origin:
+            response.headers.add('Access-Control-Allow-Origin', origin)
+    else:
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        if origin:
+            response.headers.add('Access-Control-Allow-Origin', origin)
+    return response
 
 
 
