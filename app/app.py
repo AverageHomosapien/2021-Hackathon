@@ -22,7 +22,6 @@ DBsession = sessionmaker(bind=engine)
 session = DBsession()
 
 
-# Can't search on ID
 #### Databases - SQLAlchemy ####
 # Users DB
 class Users(Base):
@@ -34,10 +33,6 @@ class Users(Base):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
-
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
 
     def serialize(self):
         return {
@@ -53,10 +48,6 @@ class Interests(Base):
     ID = Column(Integer, primary_key=True, nullable=False)
     interest = Column(String(80), unique=True, nullable=False)
     topic = Column(String(80), nullable=False)
-
-    def __init__(self, interest, topic):
-        self.interest = interest
-        self.topic = topic
 
     def __repr__(self):
         return '<Interest {}>'.format(self.interest)
@@ -74,18 +65,9 @@ class UserInterests(Base):
     """ Holds users' interests """
     __tablename__ = "UserInterests"
     ID = Column(Integer, primary_key=True, nullable=False)
-    username = Column(String(80), primary_key=True)
+    username = Column(String(80), ForeignKey('Users.username'))
     interest = Column(String(80))
-    """
-    username = db.Column(db.String(80), primary_key=True, ForeignKey(users.username))
-    interest_name = db.Column(db.String(80), ForeignKey(interests.interest_name))
-    user_n = db.relationship('User', foreign_keys='UserInterest.username')
-    interest_n = db.relationship('Interest', foreign_keys='UserInterest.interest_name')
-    """
-
-    def __init__(self, username, interest):
-        self.username = username
-        self.interest = interest
+    users = relationship('Users', back_populates='UserInterests')
 
     def __repr__(self):
         return '<User {} with interest {}>'.format(self.username, self.interest)
@@ -96,25 +78,24 @@ class UserInterests(Base):
             'username': self.username,
             'interest': self.interest
         }
+Users.UserInterests = relationship("UserInterests", order_by=UserInterests.ID, back_populates='users')
+
 
 # Messages DB
 class Messages(Base):
     """ Holds users' messages"""
     __tablename__ = "Messages"
     ID = Column(Integer, primary_key=True)
-    username = Column(String(80), nullable=False)
-    interest = Column(String(80), nullable=False)
+    username = Column(String(80), ForeignKey('Users.username'))
+    interest = Column(String(80), ForeignKey('Interests.interest'))
     content = Column(Text, nullable=False)
     posted = Column(Text, nullable=False)
 
-    def __init__(self, username, interest, content, posted=datetime.utcnow()):
-        self.username = username
-        self.interest = interest
-        self.content = content
-        self.posted = posted
+    users = relationship('Users', back_populates='Messages')
+    interests = relationship('Interests', back_populates='Messages')
 
     def __repr__(self):
-        return '<User: {}, Post {}>'.format(self.username, self.content)
+        return '<User: {}, Interest: {}, {}>'.format(self.username, self.interest, self.content)
 
     def serialize(self):
         return {
@@ -124,54 +105,13 @@ class Messages(Base):
             'content': self.content,
             'posted': self.posted
         }
-
-# Chats DB
-class Chats(Base):
-    """ Holds chat details """
-    __tablename__ = "Chats"
-    ID = Column(Integer, primary_key=True, unique=True)
-    interest = Column(String(80), unique=True, nullable=False)
-    topic = Column(String(80), nullable=False)
-    participants = Column(String(80), nullable=False)
-
-    def __init__(self, interest, topic, participants):
-        self.interest = interest
-        self.topic = topic
-        self.participants = participants
-
-    def __repr__(self):
-        return '<Chat {}, Topic {}, Participants {}>'.format(self.interest, self.topic, self.participants)
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'interest': self.interest,
-            'topic': self.topic,
-            'participants': self.participants
-        }
+Users.Messages = relationship("Messages", order_by=Messages.ID, back_populates='users')
+Interests.Messages = relationship("Messages", order_by=Messages.ID, back_populates='interests')
 
 
-### Restful API ###
+#### Restful API ####
 
-
-#?arg=value&new_arg=new_value -- ARGUMENTS
-# for v in dict.values(): -- DICTIONARY VALUES
-# OR dict.get('interest')
-
-"""
-#if request.method == 'POST':
-username = request.args.get('username')
-interest = request.args.get('interest')
-content = request.args.get('content')
-msg = Messages(username, interest, content)
-#db.session.add(msg)
-#db.session.commit()
-return jsonify(request.args)"""
-
-# request.args.to_dict()
-# request.get()
 ## https://blog.softhints.com/python-get-first-elements-dictionary/ getting number of dictionary elems
-
 # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html immdict functions
 @app.route('/messages', methods=['GET'])
 def get_messages():
@@ -181,7 +121,7 @@ def get_messages():
     else:
         if request.args.get('id') != None:
             id = request.args.get('id')
-            messages = session.query(Messages).filter_by(id = id)#.one()?
+            messages = session.query(Messages).filter_by(ID = id)#.one()?
         elif request.args.get('username') != None:
             username = request.args.get('username')
             messages = session.query(Messages).filter_by(username = username)#.one()?
@@ -206,10 +146,13 @@ def get_interests():
     else:
         if request.args.get('id') != None:
             id = request.args.get('id')
-            interests = session.query(Interests).filter_by(id = id)#.one()?
+            interests = session.query(Interests).filter_by(ID = id)
         elif request.args.get('interest') != None:
             interest = request.args.get('interest')
-            interests = session.query(Interests).filter_by(interest = interest)#.one()?
+            interests = session.query(Interests).filter_by(interest = interest)
+        elif request.args.get('topic') != None:
+            topic = request.args.get('topic')
+            interests = session.query(Interests).filter_by(topic = topic)
     session.close()
     return jsonify(interests = [i.serialize() for i in interests])
 
@@ -221,7 +164,7 @@ def get_users():
     else:
         if request.args.get('id') != None:
             id = request.args.get('id')
-            users = session.query(Users).filter_by(id = id)#.one()?
+            users = session.query(Users).filter_by(ID = id)#.one()?
         elif request.args.get('username') != None:
             username = request.args.get('username')
             users = session.query(Users).filter_by(username = username)#.one()?
@@ -242,27 +185,6 @@ def get_user_interests():
             userinterests = session.query(UserInterests).filter_by(interest = interest)#.one()?
     session.close()
     return jsonify(userinterests = [ui.serialize() for ui in userinterests])
-
-@app.route('/chats', methods=['GET'])
-def get_chats():
-    chats = []
-    if len(request.args.to_dict()) == 0:
-        chats = session.query(Chats).all()
-    else:
-        if request.args.get('id') != None:
-            id = request.args.get('id')
-            chats = session.query(Chats).filter_by(id = id)#.one()?
-        elif request.args.get('interest') != None:
-            interest = request.args.get('interest')
-            chats = session.query(Chats).filter_by(interest = interest)#.one()?
-        elif request.args.get('topic') != None:
-            topic = request.args.get('topic')
-            chats = session.query(Chats).filter_by(topic = topic)#.one()?
-        elif request.args.get('participants') != None:
-            participants = request.args.get('participants')
-            chats = session.query(Chats).filter_by(participants = participants)#.one()?
-    session.close()
-    return jsonify(chats = [c.serialize() for c in chats])
 
 
 
