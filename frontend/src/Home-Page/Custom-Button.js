@@ -17,7 +17,7 @@ const buildButton = (props) => {
                 url: valueContainer.url,
                 title: valueContainer.interest,
                 width: `${(100 / props.dataArray.interests)}%`,
-                ID: 1,
+                ID: valueContainer.id,
                 // linkToQueryPage: valueContainer.linkTo
             },
         )
@@ -130,7 +130,7 @@ export default function ChatButton(props) {
                         width: '100%',
                     }}
                     onClick={() => props.handleChange(false ,image.title)}
-                    component={Link} to="/chats"
+                    component={Link} to={`/chats/${image.ID}`}
                 >
 
                     <span

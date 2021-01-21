@@ -15,7 +15,7 @@ function App() {
                 </div>
                 <Route exact path="/home" component={Home} />
                 <Route exact path="/profile" component={Profile} />
-                <Route exact path="/chats" component={ChatUI} />
+                <Route exact path="/chats/:id" component={ChatUI} />
             </div>
         </Router>
     )

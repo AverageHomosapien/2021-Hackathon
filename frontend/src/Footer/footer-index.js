@@ -4,12 +4,12 @@ import LabelBottomNavigation from './Bottom-Nav'
 
 
 class Footer extends Component {
-    getStyles = () => {
-        return {
-            flexGrow: 1,
-            backgroundColor: "#1f1f1f",
+        getStyles = () => {
+            return {
+                flexGrow: 1,
+                backgroundColor: "#1f1f1f",
+            }
         }
-    }
 
     render() {
         return (
