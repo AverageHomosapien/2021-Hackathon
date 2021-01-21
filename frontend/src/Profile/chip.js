@@ -9,7 +9,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     flexWrap: 'wrap',
     listStyle: 'none',
-//    padding: theme.spacing(0.5),
     paddingTop: "5%" ,
     margin: 0,
   },
@@ -26,10 +25,10 @@ export default function ChipsArray() {
     { key: 1, label: 'Yoga' },
     { key: 2, label: 'Meditation' },
     { key: 4, label: 'Chess' },
-    { key: 4, label: 'French' },
-    { key: 4, label: 'German' },
-    { key: 4, label: 'Painting' },
-    { key: 4, label: 'Singing' },
+    { key: 5, label: 'French' },
+    { key: 6, label: 'German' },
+    { key: 7, label: 'Painting' },
+    { key: 8, label: 'Singing' },
   ]);
 
   const handleDelete = (chipToDelete) => () => {
