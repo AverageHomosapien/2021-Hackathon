@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 frontend/.eslintcache
 
 # Gitignoring pycaches
 app/__pycache__
 __pycache__/
+=======
+>>>>>>> Revert "Merge branch 'frontend' of https://github.com/AverageHomosapien/2021-Hackathon into frontend"
