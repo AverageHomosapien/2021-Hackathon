@@ -12,9 +12,9 @@ import Avatar from '@material-ui/core/Avatar';
 import LetterAvatars from "./avatar";
 import CustomizedSwitches from "./switch";
 import ChipsArray from "./chip";
+import Paper from '@material-ui/core/Paper';
 
 class Profile extends Component {
-
     render() {
         return (
             <React.Fragment>
@@ -25,15 +25,13 @@ class Profile extends Component {
                     justify="space-evenly"
                     alignItems="stretch"
                 >
-                    <Grid container item xs={3}>
-                        <LetterAvatars />
-                        <Divider/>
-                        <Typography variant="body1" gutterBottom style={{ paddingLeft: "1%" }}>
+                    <Grid container item xs={1} style={{paddingTop: '1%'}} >
+                        <LetterAvatars/>
+                        <Typography variant="body1" gutterBottom style={{ paddingLeft: "1%" }} style ={{paddingTop: "40%"}} >
                             Jamie Lannister
                         </Typography>
-                        <Divider/>
-                        <ContainedButtons /> 
-                        <Divider/>
+                        <Divider/> 
+                        <ContainedButtons/> 
                         <CustomizedSwitches/>
                     </Grid>
 
