@@ -10,6 +10,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import LetterAvatars from "./avatar";
+import CustomizedSwitches from "./switch";
+import ChipsArray from "./chip";
 
 class Profile extends Component {
 
@@ -23,15 +25,19 @@ class Profile extends Component {
                     justify="space-evenly"
                     alignItems="stretch"
                 >
-                    <Grid item>
-                    <LetterAvatars />
+                    <Grid container item xs={3}>
+                        <LetterAvatars />
+                        <Divider/>
                         <Typography variant="body1" gutterBottom style={{ paddingLeft: "1%" }}>
                             Jamie Lannister
                         </Typography>
+                        <Divider/>
                         <ContainedButtons /> 
+                        <Divider/>
+                        <CustomizedSwitches/>
                     </Grid>
 
-                    <Grid item>
+                    <Grid container item xs={3}>
                         <TextField
                             id="filled-read-only-input"
                             label="Bio"
@@ -45,8 +51,9 @@ class Profile extends Component {
                             }}
                             variant="filled"
                         />
+                        <ChipsArray/>
                     </Grid>
-                    <Grid item>
+                    <Grid container item xs={2}>
                         <List >
                         <ListItem alignItems="center">
                             <ListItemAvatar>
@@ -83,6 +90,42 @@ class Profile extends Component {
                             primary="Ferrara Clifford"
                             />
                         </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem alignItems="center">
+                            <ListItemAvatar>
+                            <Avatar alt="Daenerys Targaryen" src="/static/images/avatar/3.jpg" />
+                            </ListItemAvatar>
+                            <ListItemText
+                            primary="Daenerys Targaryen"
+                            />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem alignItems="center">
+                            <ListItemAvatar>
+                            <Avatar alt="Arya Stark" src="/static/images/avatar/3.jpg" />
+                            </ListItemAvatar>
+                            <ListItemText
+                            primary="Arya Stark"
+                            />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem alignItems="center">
+                            <ListItemAvatar>
+                            <Avatar alt="Khal Drogo" src="/static/images/avatar/3.jpg" />
+                            </ListItemAvatar>
+                            <ListItemText
+                            primary="Khal Drogo"
+                            />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem alignItems="center">
+                            <ListItemAvatar>
+                            <Avatar alt="Jon Snow" src="/static/images/avatar/3.jpg" />
+                            </ListItemAvatar>
+                            <ListItemText
+                            primary="Jon Snow"
+                            />
+                        </ListItem>
                         </List>
                     </Grid>
                 </Grid>
@@ -90,6 +133,5 @@ class Profile extends Component {
         )
     }
 }
-
 
 export default Profile
