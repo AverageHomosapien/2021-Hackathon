@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import NestedGrid from './ChatMenu'
+import Fade from "@material-ui/core/Fade";
 
 function TabPanel(props) {
   const {children, value, index, classes, ...other} = props;
@@ -53,11 +54,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SimpleTabs(props) {
   const classes = useStyles();
+  
   const [value, setValue] = React.useState(0);
+  const [showNestedGrid, setGridVisibility] = React.useState(false);
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if (newValue === 0) {
+      handleGridChange(!showNestedGrid);
+    }
   };
+
+  const handleGridChange = (value, topic) => {
+    setGridVisibility(value);
+  }
 
   return (
     <div className={classes.root}>
@@ -70,7 +81,9 @@ export default function SimpleTabs(props) {
       </AppBar>
       <TabPanel style={{backgroundColor: "WHITE"}} value={value} index={0}>
         { props.interestArray &&
-          <NestedGrid dataArray={props.interestArray}/>
+          <Fade in={showNestedGrid}>
+            <NestedGrid dataArray={props.interestArray} changeHandler={handleGridChange}/>
+          </Fade>
         }
       </TabPanel>
       <TabPanel value={value} index={1}>

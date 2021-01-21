@@ -44,13 +44,13 @@ export default function NestedGrid(props) {
     return (
       <React.Fragment>
         <Grid item xs={4} >
-            <ChatButton style={{flexWrap : 'wrap'}} dataArray={partionArrayIntoThree(0)}/>
+            <ChatButton handleChange={props.changeHandler} style={{flexWrap : 'wrap'}} dataArray={partionArrayIntoThree(0)}/>
         </Grid>
         <Grid item xs={4}>
-            <ChatButton style={{flexWrap : 'wrap'}} dataArray={partionArrayIntoThree(1)}/>
+            <ChatButton handleChange={props.changeHandler} style={{flexWrap : 'wrap'}} dataArray={partionArrayIntoThree(1)}/>
         </Grid>
         <Grid item xs={4}>
-            <ChatButton style={{flexWrap : 'wrap'}} dataArray={partionArrayIntoThree(2)}/>
+            <ChatButton handleChange={props.changeHandler} style={{flexWrap : 'wrap'}} dataArray={partionArrayIntoThree(2)}/>
         </Grid>
       </React.Fragment>
     );
