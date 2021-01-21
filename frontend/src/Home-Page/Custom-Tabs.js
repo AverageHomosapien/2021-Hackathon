@@ -6,9 +6,12 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+<<<<<<< HEAD
 import Container from '@material-ui/core/Container';
 import NestedGrid from './ChatMenu'
 import Fade from "@material-ui/core/Fade";
+=======
+>>>>>>> Revert "Merge branch 'frontend' of https://github.com/AverageHomosapien/2021-Hackathon into frontend"
 
 function TabPanel(props) {
   const {children, value, index, classes, ...other} = props;
