@@ -48,6 +48,7 @@ class Interests(Base):
     ID = Column(Integer, primary_key=True, nullable=False)
     interest = Column(String(80), unique=True, nullable=False)
     topic = Column(String(80), nullable=False)
+    url = Column(String(80))
 
     def __repr__(self):
         return '<Interest {}>'.format(self.interest)
@@ -56,7 +57,8 @@ class Interests(Base):
         return {
             'id': self.ID,
             'interest': self.interest,
-            'topic': self.topic
+            'topic': self.topic,
+            'url': self.url
         }
 
 
