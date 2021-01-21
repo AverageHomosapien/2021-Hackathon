@@ -1,6 +1,9 @@
 import React, {Component, Fragment} from "react";
 import SimpleTabs from "./Custom-Tabs"
 import axios from '../Axios'
+import {
+    Route
+  } from "react-router-dom";
 
 class Home extends Component {
 
@@ -23,7 +26,9 @@ class Home extends Component {
         return (
             <React.Fragment>
                 <div style={{paddingTop: "5%"}}>
-                    <SimpleTabs interestArray={this.state.data}/>
+                    <Route path="/home">
+                        <SimpleTabs interestArray={this.state.data}/>
+                    </Route>
                 </div>
             </React.Fragment>
         )

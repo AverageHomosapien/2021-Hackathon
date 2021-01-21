@@ -2,6 +2,7 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
+import {Link} from "react-router-dom";
 
 const buildButton = (props) => {
     const imagesToReturn = [];
@@ -13,7 +14,7 @@ const buildButton = (props) => {
     props.dataArray.map(valueContainer => {
         imagesToReturn.push(
             {
-                url: '/static/images/grid-list/camera.jpg', // Leave atm but build when we do something
+                url: valueContainer.url,
                 title: valueContainer.interest,
                 width: `${(100 / props.dataArray.interests)}%`,
                 ID: 1,
@@ -129,10 +130,16 @@ export default function ChatButton(props) {
                         width: '100%',
                     }}
                     onClick={() => props.handleChange(false ,image.title)}
+                    component={Link} to="/chats"
                 >
 
-                    <BackgroundImageReturnLink image={props.Image} />
-                    <span className={classes.imageBackdrop}/>
+                    <span
+                        className={classes.imageSrc}
+                        style={{
+                            backgroundImage: `url(${image.url})`,
+                        }}
+                    />
+                    <span className={classes.imageBackdrop} />
                     <span className={classes.imageButton}>
             <Typography
                 component="span"
