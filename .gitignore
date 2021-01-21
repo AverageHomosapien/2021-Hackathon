@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 frontend/.eslintcache
 
 # Gitignoring pycaches
 app/__pycache__
 __pycache__/
+=======
+>>>>>>> 030ee1bea6c469a7a55650f431b5f6d161b80a6a
