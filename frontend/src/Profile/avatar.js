@@ -19,7 +19,7 @@ export default function LetterAvatars() {
 
   return (
     <div className={classes.root}>
-      <Avatar> <h1>JM</h1> </Avatar>
+      <Avatar> <img src="https://avatarfiles.alphacoders.com/186/thumb-186033.jpg" /> </Avatar>
     </div>
   );
 }
