@@ -75,8 +75,7 @@ export default function SimpleTabs(props) {
       <AppBar position="static" style={{backgroundColor: "#000000"}}>
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Chats" {...a11yProps(0)} />
-          <Tab label="Wiki" {...a11yProps(1)} />
-          <Tab label="Rules" {...a11yProps(2)} />
+          <Tab label="Resources" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel style={{backgroundColor: "WHITE"}} value={value} index={0}>
@@ -87,10 +86,7 @@ export default function SimpleTabs(props) {
         }
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Wiki
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Rules
+        Resources
       </TabPanel>
     </div>
   );

@@ -27,7 +27,7 @@ class Home extends Component {
     getStyles = () => {
         return {
             marginRight: 'auto',
-            height: "200px",
+            height: "150px",
             display: 'block',
             textAlign: 'left'
         }

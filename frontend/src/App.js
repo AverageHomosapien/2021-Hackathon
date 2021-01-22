@@ -10,9 +10,7 @@ function App() {
     return (
         <Router>
             <div className="App">
-                <div>
-                    <Route path="/" component={Header} />
-                </div>
+                <Route path="/" component={Header} />
                 <Route exact path="/home" component={Home} />
                 <Route exact path="/profile" component={Profile} />
                 <Route exact path="/chats/:id" component={ChatUI} />

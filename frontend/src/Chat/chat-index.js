@@ -1,90 +1,52 @@
-import React, {useEffect, useState} from 'react';
-import { Chat, Channel, ChannelHeader, Thread, Window } from 'stream-chat-react';
+import React, { useEffect, useState } from 'react';
+import { Chat, Channel, ChannelHeader, Thread, Window, ChannelList, ChannelListTeam, MessageTeam } from 'stream-chat-react';
 import { MessageList, MessageInput } from 'stream-chat-react';
 import { StreamChat } from 'stream-chat';
 import axios from '../Axios'
 
 import 'stream-chat-react/dist/css/index.css';
 
-const initialArray = [
-    {
-        "id": 1,
-        "username": "andrew656"
-    },
-];
 
-const initialData = {
-        "id": 1,
-        "interest": "Aerobics",
-        "topic": "Fitness",
-        "url": "https://c.pxhere.com/photos/d5/8a/active_activity_aerobics_african_beautyrobic_blonde_hair_blurred_background_body-1529747.jpg!d"
-}
-
-export default function ChatUI (props) {
-
-    const [interestData, setstate] = useState(initialData);
-    const [usersData, setUsers] = useState(initialArray);
-
-    useEffect(() => {
-        function handleChange(incomingdata) {
-            setstate(incomingdata);
-            console.log(interestData);
-        }
-
-        axios.PYTHON_API.getInterestsID(props.match.params['id'])
-            .then(response => {
-                handleChange(response.data.interests[0]);
-            })
-
-    }, []);
+const chatClient = new StreamChat('qk4nn7rpcn75');
 
 
-    useEffect(() => {
-        function handleChange(incomingdata) {
-            setUsers(incomingdata);
-            console.log(incomingdata);
-        }
+const userToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYnJva2VuLXdhdGVyZmFsbC01In0.d1xKTlD_D0G-VsBoDBNbaLjO-2XWNA8rlTm4ru4sMHg';
 
-        axios.PYTHON_API.getUsers()
-            .then(response => {
-                handleChange(response.data.users);
-            })
-
-    }, []);
-    
-
-    const chatClient = new StreamChat('9unkw3x6rzdf');
-    const userToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoicm91bmQtZmllbGQtMCJ9.Gg-gvp8H_3ZpIk12_6bKNRFQAbwoWU9gCkCaDooLSf4';
-
-    chatClient.setUser(
-        {
-            id: 'round-field-0',
-            name: 'Round field',
-            image: 'https://getstream.io/random_png/?id=round-field-0&name=Round+field'
-        },
-        userToken,
-    );
+chatClient.setUser(
+  {
+       id: 'broken-waterfall-5',
+       name: 'Broken waterfall',
+       image: 'https://getstream.io/random_svg/?id=broken-waterfall-5&amp;name=Broken+waterfall'
+  },
+  userToken,
+);
 
 
-    const conversation = chatClient.channel('messaging', 'channel-name', {
-        name: 'Founder Chat',
-        image: 'http://bit.ly/2O35mws',
-        members: ['thierry', 'tommaso'],
-    });
+const filters = { type: 'team', example: 2 };
+const sort = { last_message_at: -1 };
+const channels = chatClient.queryChannels(filters, sort, );
 
-
-    conversation.create();
+export default function ChatUI(props) {
 
     return (
-        <Chat client={chatClient} theme={'messaging dark'}>
-            <Channel channel={conversation}>
-                <Window>
-                    <ChannelHeader />
-                    <MessageList />
-                    <MessageInput />
-                </Window>
-                <Thread />
-            </Channel>
-        </Chat>
+        <Chat client={chatClient} theme="team dark">
+        <ChannelList
+          sort={sort}
+          filters={filters}
+          options={{
+            subscribe: true,
+            state: true,
+          }}
+          List={ChannelListTeam}
+          />
+        <Channel>
+          <Window>
+            <ChannelHeader />
+            <MessageList Message={MessageTeam} />
+            <MessageInput focus />
+          </Window>
+          <Thread Message={MessageTeam} />
+        </Channel>
+      </Chat>
     )
 };
